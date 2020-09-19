@@ -36,6 +36,29 @@ class Board extends React.Component{
 		const pieceValues = this.state.pieceValues.slice();
 		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
 		pieceValues[x][y]=this.state.color;
+		const adjacentPieces = [[x-1,y-1],[x,y-1],[x+1,y-1],[x+1,y],[x+1,y+1],[x,y+1],[x-1,y+1],[x-1,y]]
+		adjacentPieces.filter(([ix,iy])=>{
+			return ix>=0&&iy>=0&&ix<=7&&iy<=7&&pieceValues[ix][iy]===oppositeColor
+		}).forEach(([ix,iy])=>{
+			var nx=ix+ix-x;
+			var ny=iy+iy-y;
+			while(nx>=0&&nx<=7&&ny>=0&&ny<=7) {
+				if (pieceValues[nx][ny].startsWith(oppositeColor)) {
+					nx+=ix-x;
+					ny+=iy-y;
+				}
+				else if (pieceValues[nx][ny].startsWith(this.state.color)) {
+					nx+=x-ix;
+					ny+=y-iy;
+					while (nx!==x||ny!==y){
+						pieceValues[nx][ny]=this.state.color;
+						nx+=x-ix;
+						ny+=y-iy;
+					}
+					break;
+				} else break;
+			}
+		})
 		this.setState({pieceValues:pieceValues,color:oppositeColor})
 	}
 	
@@ -50,7 +73,7 @@ class Board extends React.Component{
 			var nx=ix+ix-x;
 			var ny=iy+iy-y;
 			while(nx>=0&&nx<=7&&ny>=0&&ny<=7) {
-				if (pieceValues[nx][ny].startsWith(this.state.oppositeColor)) {
+				if (pieceValues[nx][ny].startsWith(oppositeColor)) {
 					nx+=ix-x;
 					ny+=iy-y;
 				}
