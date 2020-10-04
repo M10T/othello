@@ -26,17 +26,18 @@ class Board extends React.Component{
 		this.state = {
 			pieceValues: pieceValues,
 			color:'whiteCircle',
-			playerColor: undefined
+			playerColor: undefined,
+			otherPlayer: false
 		}
 	}
 	
 	componentDidMount() {
 		const io = require('socket.io-client')
-		const socket = io.connect('ws://localhost:3001')
+		const socket = io.connect('ws://192.168.1.242:3001')
 		socket.on('setColor',x=>{this.setState({playerColor:x.color})})
 		socket.on('message',x=>console.log("Message: " + x))
-		socket.on('disconnected',()=>console.log('Game Ended'))
-		socket.on('otherplayer', ()=>console.log('Other Player Joined'))
+		socket.on('disconnected',()=>this.setState({otherPlayer:false}))
+		socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
 		socket.on('move', o=>this.setPiece(o.x,o.y))
 		this.setState({socket:socket})
 	}
@@ -77,7 +78,7 @@ class Board extends React.Component{
 	}
 	
 	pieceCanChange = (x,y) => {
-		if (this.state.color!==this.state.playerColor) return false;
+		if (this.state.color!==this.state.playerColor || !this.state.otherPlayer) return false;
 		const pieceValues = this.state.pieceValues.slice();
 		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
 		if (pieceValues[x][y].startsWith(oppositeColor)||pieceValues[x][y].startsWith(this.state.color))return false;
