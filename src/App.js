@@ -14,7 +14,7 @@ class PieceSpace extends React.Component {
 }
 
 class Board extends React.Component{
-	
+
 	constructor(props) {
 		super(props)
 		const pieceValues = Array.from(Array(8),_=>Array(8).fill(''))
@@ -24,14 +24,15 @@ class Board extends React.Component{
 		pieceValues[4][3]='whiteCircle'
 		this.state = {
 			pieceValues: pieceValues,
-			color:'whiteCircle'
+			color:'whiteCircle',
+      anyCanMove: true
 		}
 	}
-	
+
 	getPiece = (x,y) => {
 		return this.state.pieceValues[x][y]
 	}
-	
+
 	setPiece = (x,y) => {
 		const pieceValues = this.state.pieceValues.slice();
 		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
@@ -61,7 +62,7 @@ class Board extends React.Component{
 		})
 		this.setState({pieceValues:pieceValues,color:oppositeColor})
 	}
-	
+
 	pieceCanChange = (x,y) => {
 		const pieceValues = this.state.pieceValues.slice();
 		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
@@ -83,14 +84,51 @@ class Board extends React.Component{
 			return false;
 		}).filter(a=>a).length>0;
 	}
-	
+
+  winner = () => {
+    const score = this.state.pieceValues.map((row) =>{
+      return(row.map((color)=>{
+        if(color.startsWith("whiteCircle")) return 1;
+        else if(color.startsWith("blackCircle")) return -1;
+        return 0;
+      }))
+    })
+    var sum = score.reduce((a,v)=>a+v.reduce((a2,v2)=>a2+v2),0);
+    if(sum>0) return "The Winner is White";
+    else if(sum<0) return "The Winner is Black";
+    return "It is a Tie";
+  }
+
+  end = () => {
+    var canPlace = false;
+    const color = this.state.color;
+    const oppositeColor = color==='whiteCircle'?'blackCircle':'whiteCircle';
+    for(var i=0;i<=7;i++){
+      for(var x=0;x<=7;x++){
+        if(this.state.pieceValues[i][x]=== this.state.color) canPlace |= this.pieceCanChange(i,x);
+      }
+    }
+    if(!canPlace && !this.state.anyCanMove) return true;
+    else if(!canPlace) this.setState({anyCanMove:false});
+    else if(!this.state.anyCanMove)this.setState({anyCanMove:true});
+    return false;
+  }
+
 	render() {
 		return (
-			<div className="outer">
-				{
-					this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={this.pieceCanChange(ind,i)} type={v} playerColor={this.state.color}/>))}</div>))
-				}
-			</div>
+      <div>
+			   <div className="outer">
+				    {
+              this.end()?<h1 id="winner">{this.winner()}</h1>:''
+            }
+            {
+					    this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={this.pieceCanChange(ind,i)} type={v} playerColor={this.state.color}/>))}</div>))
+				    }
+			   </div>
+         <div>
+
+         </div>
+      </div>
 		)
 	}
 }
