@@ -22,12 +22,14 @@ class Board extends React.Component{
 		pieceValues[4][4]='blackCircle'
 		pieceValues[3][4]='whiteCircle'
 		pieceValues[4][3]='whiteCircle'
-		
 		this.state = {
 			pieceValues: pieceValues,
 			color:'whiteCircle',
 			playerColor: undefined,
-			otherPlayer: false
+			otherPlayer: false,
+			chat: [],
+			socket: undefined,
+			chatend: undefined
 		}
 	}
 	
@@ -35,10 +37,10 @@ class Board extends React.Component{
 		const io = require('socket.io-client')
 		const socket = io.connect('ws://192.168.1.242:3001')
 		socket.on('setColor',x=>{this.setState({playerColor:x.color})})
-		socket.on('message',x=>console.log("Message: " + x))
 		socket.on('disconnected',()=>this.setState({otherPlayer:false}))
 		socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
 		socket.on('move', o=>this.setPiece(o.x,o.y))
+		socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
 		this.setState({socket:socket})
 	}
 	
@@ -100,12 +102,41 @@ class Board extends React.Component{
 		}).filter(a=>a).length>0;
 	}
 	
+	sendChat = (e) => {
+		if(e.keyCode===13 && this.state.otherPlayer && e.target.value!=="") {
+			e.target.value = e.target.value.trim()
+			if (e.target.value !== "") {
+				this.setState({chat:this.state.chat.concat({sender:"You",contents:e.target.value}),chatend:undefined})
+				this.state.socket.send(e.target.value)
+			}
+			e.target.value = ""
+		}
+	}
+	
 	render() {
+		const chatend = document.getElementById('chatend')
+		if (chatend!==null && chatend !== this.state.chatend) {
+			chatend.scrollIntoView()
+			this.setState({chatend:chatend})
+		}
 		return (
 			<div className="outer">
-				{
-					this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={this.pieceCanChange(ind,i)} type={v} playerColor={this.state.color}/>))}</div>))
-				}
+				<div className="game">
+					{
+						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={this.pieceCanChange(ind,i)} type={v} playerColor={this.state.color}/>))}</div>))
+					}
+				</div>
+				<div className="chat">
+					<p style={{marginBottom:0}}><strong>Chat:</strong></p>
+					<div className="messages">
+						{
+							this.state.chat.map((x,ind)=>(<p key={ind} id={ind===this.state.chat.length-1?'chatend':''}>{x.sender}: {x.contents}</p>))
+						}
+					</div>
+					<div className="newmessage">
+						<input type="text" className="messageinput" onKeyUp={this.sendChat}/>
+					</div>
+				</div>
 			</div>
 		)
 	}

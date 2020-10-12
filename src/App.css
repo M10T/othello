@@ -39,7 +39,7 @@
 	flex-direction:row;
 }
 
-.outer {
+.game {
 	border-style:solid;
 	border-width:1px;
 	border-color:black;
@@ -48,4 +48,37 @@
 
 .rectangle:focus {
 	outline:none;
+}
+
+.chat {
+	border-style:solid;
+	border-width:1px;
+	border-color:black;
+	margin-left:50px;
+	width: 200px;
+	height:800px;
+	display:flex;
+	flex-direction:column;
+}
+
+.outer {
+	display:flex;
+	flex-direction:row;
+}
+
+.messages {
+	flex:24;
+	overflow:auto;
+}
+
+.newmessage {
+	display:flex;
+	flex:1;
+}
+
+.messageinput {
+	margin-left:5%;
+	margin-right:5%;
+	width:90%;
+	height:80%
 }

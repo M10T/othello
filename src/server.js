@@ -23,7 +23,7 @@ io.on('connect', socket=>{
 		io.to(sendRoom).emit('disconnected')
 		if (room == currentRoom-1) {
 			alreadyOne=false;
-			currentRoom++;
+			currentRoom+=currentRoom%2;
 		}
 	})
 	socket.on('move', x=>io.to(sendRoom).emit('move',x))
