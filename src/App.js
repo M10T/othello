@@ -54,7 +54,6 @@ class Board extends React.Component{
 		this.state = {
 			pieceValues: pieceValues,
 			color:'whiteCircle',
-      anyCanMove: true,
 			playerColor: undefined,
 			otherPlayer: false,
 			chat: [],
@@ -71,6 +70,7 @@ class Board extends React.Component{
 		socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
 		socket.on('move', o=>this.setPiece(o.x,o.y))
 		socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
+		socket.on('nomove',x=>this.setState({color:this.state.playerColor}))
 		this.setState({socket:socket})
 	}
 
@@ -108,12 +108,11 @@ class Board extends React.Component{
 		if (this.state.playerColor===this.state.color)this.state.socket.emit('move',{x:x,y:y})
 		this.setState({pieceValues:pieceValues,color:oppositeColor})
 	}
-
-	pieceCanChange = (x,y,test=false) => {
-		if ((this.state.color!==this.state.playerColor || !this.state.otherPlayer) && !test) return false;
-		const pieceValues = this.state.pieceValues.slice();
-		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
-		if ((pieceValues[x][y].startsWith(oppositeColor)||pieceValues[x][y].startsWith(this.state.color)) && !test)return false;
+	
+	pieceCanChange = (color,x,y) => {
+		const pieceValues = this.state.pieceValues.slice()
+		const oppositeColor = color==='whiteCircle'?'blackCircle':'whiteCircle';
+		if (pieceValues[x][y] === color || pieceValues[x][y] === oppositeColor) return false;
 		const adjacentPieces = [[x-1,y-1],[x,y-1],[x+1,y-1],[x+1,y],[x+1,y+1],[x,y+1],[x-1,y+1],[x-1,y]]
 		return adjacentPieces.filter(([ix,iy])=>{
 			return ix>=0&&iy>=0&&ix<=7&&iy<=7&&pieceValues[ix][iy]===oppositeColor
@@ -125,11 +124,15 @@ class Board extends React.Component{
 					nx+=ix-x;
 					ny+=iy-y;
 				}
-				else if (pieceValues[nx][ny].startsWith(this.state.color)) return true;
+				else if (pieceValues[nx][ny].startsWith(color)) return true;
 				else return false;
 			}
 			return false;
 		}).filter(a=>a).length>0;
+	}
+	
+	changingPieces = (color) => {
+		return this.state.pieceValues.map((arr,i)=>arr.map((_,j)=>this.pieceCanChange(color,i,j)))
 	}
 
   winner = () => {
@@ -147,18 +150,15 @@ class Board extends React.Component{
   }
 
   end = () => {
-    var canPlace = false;
-    const color = this.state.color;
-    const oppositeColor = color==='whiteCircle'?'blackCircle':'whiteCircle';
-    for(var i=0;i<=7;i++){
-      for(var x=0;x<=7;x++){
-        if(this.state.pieceValues[i][x]=== this.state.color) canPlace = canPlace || this.pieceCanChange(i,x,true);
-      }
-    }
-    if(!canPlace && !this.state.anyCanMove) return true;
-    else if(!canPlace) this.setState({anyCanMove:false});
-    else if(!this.state.anyCanMove)this.setState({anyCanMove:true});
-    return false;
+	const color = this.state.color;
+	const opposite = this.state.color==="whiteCircle"?"blackCircle":"whiteCircle"
+    const cMoves = this.changingPieces(color).flat().reduce((acc,v)=>acc||v)
+	const oMoves = this.changingPieces(opposite).flat().reduce((acc,v)=>acc||v)
+	if (!cMoves && oMoves) {
+		this.state.socket.emit('nomove')
+		this.setState({color:opposite})
+	}
+    return !cMoves && !oMoves
   }
 
 
@@ -179,6 +179,7 @@ class Board extends React.Component{
 			chatend.scrollIntoView()
 			this.setState({chatend:chatend})
 		}
+		const changingPieces = this.changingPieces(this.state.color)
 		return (
 			<div className="outer">
         <div>
@@ -189,7 +190,7 @@ class Board extends React.Component{
             this.end()?<h1 id="winner">{this.winner()}</h1>:''
           }
 					{
-						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={this.pieceCanChange(ind,i)} type={v} playerColor={this.state.color}/>))}</div>))
+						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
 					}
 				</div>
 				<div className="chat">
