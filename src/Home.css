@@ -1,0 +1,14 @@
+.header {
+  height: 100px;
+  width: 100%;
+}
+
+.border {
+  width: 15%;
+  position: float;
+}
+
+.body {
+  width: 70%;
+  position: float;
+}

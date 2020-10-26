@@ -1,5 +1,34 @@
 import React from 'react';
-import './App.css'
+import './App.css';
+import './Home.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
+function BasicExample() {
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="/options">
+          <Options />
+        </Route>
+        <Route path="/othello">
+          <Board />
+        </Route>
+        <Route path="/about">
+          <About />
+        </Route>
+      </Switch>
+    </Router>
+  );
+}
+
 
 class PieceSpace extends React.Component {
     render() {
@@ -152,6 +181,9 @@ class Board extends React.Component{
 		}
 		return (
 			<div className="outer">
+        <div>
+          <h1>Othello</h1>
+        </div>
 				<div className="game">
           {
             this.end()?<h1 id="winner">{this.winner()}</h1>:''
@@ -171,6 +203,9 @@ class Board extends React.Component{
 						<input type="text" className="messageinput" onKeyUp={this.sendChat}/>
 					</div>
 				</div>
+        <div>
+          <Link to="/">Home</Link>
+        </div>
 			</div>
 		)
 	}
@@ -179,9 +214,52 @@ class Board extends React.Component{
 function App() {
   return (
 	<div>
-		<Board/>
+		<BasicExample/>
 	</div>
   );
 }
+
+function About() {
+  return (
+    <div classname = "outer">
+      <div classname = "header"></div>
+      <div classname = "border"></div>
+      <div classname = "body">
+        <h1>Othello</h1>
+        <Link to="/">Home</Link>
+        <text> stuff... </text>
+      </div>
+      <div classname = "border"></div>
+    </div>);
+}
+
+function Options() {
+  return (
+    <div classname = "outer">
+      <div classname = "header"></div>
+      <div classname = "border"></div>
+      <div classname = "body">
+        <h1>Othello</h1>
+        <Link to="/othello">Multiplayer</Link>
+        <Link Link to="/">Play against an AI</Link>
+      </div>
+      <div classname = "border"></div>
+    </div>);
+}
+
+function Home() {
+  return (
+    <div classname = "outer">
+      <div classname = "header"></div>
+      <div classname = "border"></div>
+      <div classname = "body">
+        <h1>Othello</h1>
+        <Link to="/options">Play</Link>
+        <Link to="/about">About</Link>
+      </div>
+      <div classname = "border"></div>
+    </div>);
+}
+
 
 export default App;
