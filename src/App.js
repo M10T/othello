@@ -19,8 +19,11 @@ function BasicExample() {
           <Options />
         </Route>
         <Route path="/othello">
-          <Board />
+          <Board computer={false}/>
         </Route>
+		<Route path="/computer">
+		  <Board computer={true}/>
+		</Route>
         <Route path="/about">
           <About />
         </Route>
@@ -64,13 +67,12 @@ class Board extends React.Component{
 
 	componentDidMount() {
 		const io = require('socket.io-client')
-		const socket = io.connect('ws://localhost:3001')
+		const socket = io.connect('ws://localhost:3001',{query:{computer:this.props.computer}})
 		socket.on('setColor',x=>{this.setState({playerColor:x.color})})
 		socket.on('disconnected',()=>this.setState({otherPlayer:false}))
 		socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
 		socket.on('move', o=>this.setPiece(o.x,o.y))
 		socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
-		socket.on('nomove',x=>this.setState({color:this.state.playerColor}))
 		this.setState({socket:socket})
 	}
 
@@ -155,7 +157,6 @@ class Board extends React.Component{
     const cMoves = this.changingPieces(color).flat().reduce((acc,v)=>acc||v)
 	const oMoves = this.changingPieces(opposite).flat().reduce((acc,v)=>acc||v)
 	if (!cMoves && oMoves) {
-		this.state.socket.emit('nomove')
 		this.setState({color:opposite})
 	}
     return !cMoves && !oMoves
@@ -193,7 +194,7 @@ class Board extends React.Component{
 						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
 					}
 				</div>
-				<div className="chat">
+				{!this.props.computer?(<div className="chat">
 					<p style={{marginBottom:0}}><strong>Chat:</strong></p>
 					<div className="messages">
 						{
@@ -203,7 +204,7 @@ class Board extends React.Component{
 					<div className="newmessage">
 						<input type="text" className="messageinput" onKeyUp={this.sendChat}/>
 					</div>
-				</div>
+				</div>):(<></>)}
         <div>
           <Link to="/">Home</Link>
         </div>
@@ -228,7 +229,7 @@ function About() {
       <div classname = "body">
         <h1>Othello</h1>
         <Link to="/">Home</Link>
-        <text> stuff... </text>
+        <p> stuff... </p>
       </div>
       <div classname = "border"></div>
     </div>);
@@ -242,7 +243,7 @@ function Options() {
       <div classname = "body">
         <h1>Othello</h1>
         <Link to="/othello">Multiplayer</Link>
-        <Link Link to="/">Play against an AI</Link>
+        <Link to="/computer">Play against an AI</Link>
       </div>
       <div classname = "border"></div>
     </div>);
