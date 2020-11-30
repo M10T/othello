@@ -2,13 +2,14 @@ const Board = require("./Board.js")
 const Tree = require("./Tree.js")
 
 class AI {
-	constructor() {
+	constructor(iterations) {
 		this.tree = new Tree(new Board(),-1)
+		this.iterations = iterations;
 	}
 	
 	runMove() {
 		const tree = this.tree;
-		for (var i = 0; i < 50; i++) {
+		for (var i = 0; i < this.iterations; i++) {
 			tree.expand()
 		}
 

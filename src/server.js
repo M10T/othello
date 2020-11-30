@@ -32,7 +32,7 @@ io.on('connect', socket=>{
 		socket.on('move', x=>io.to(sendRoom).emit('move',x))
 		nextRoom()
 	} else {
-		const agent = new AI()
+		const agent = new AI(300)
 		socket.emit('setColor',{color:'blackCircle'})
 		socket.emit('otherplayer')
 		socket.emit('move',agent.runMove())

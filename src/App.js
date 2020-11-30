@@ -71,7 +71,9 @@ class Board extends React.Component{
 		socket.on('setColor',x=>{this.setState({playerColor:x.color})})
 		socket.on('disconnected',()=>this.setState({otherPlayer:false}))
 		socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
-		socket.on('move', o=>this.setPiece(o.x,o.y))
+		socket.on('move', o=>{
+			this.setPiece(o.x,o.y);
+		})
 		socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
 		this.setState({socket:socket})
 	}
@@ -108,7 +110,11 @@ class Board extends React.Component{
 			}
 		})
 		if (this.state.playerColor===this.state.color)this.state.socket.emit('move',{x:x,y:y})
-		this.setState({pieceValues:pieceValues,color:oppositeColor})
+		this.setState({pieceValues:pieceValues})
+		const oMoves = this.changingPieces(oppositeColor).flat().reduce((acc,v)=>acc||v)
+		if (oMoves) {
+			this.setState({color:oppositeColor})
+		}
 	}
 	
 	pieceCanChange = (color,x,y) => {
@@ -156,9 +162,6 @@ class Board extends React.Component{
 	const opposite = this.state.color==="whiteCircle"?"blackCircle":"whiteCircle"
     const cMoves = this.changingPieces(color).flat().reduce((acc,v)=>acc||v)
 	const oMoves = this.changingPieces(opposite).flat().reduce((acc,v)=>acc||v)
-	if (!cMoves && oMoves) {
-		this.setState({color:opposite})
-	}
     return !cMoves && !oMoves
   }
 
@@ -223,43 +226,43 @@ function App() {
 
 function About() {
   return (
-    <div classname = "outer">
-      <div classname = "header"></div>
-      <div classname = "border"></div>
-      <div classname = "body">
+    <div className = "outer">
+      <div className = "header"></div>
+      <div className = "border"></div>
+      <div className = "body">
         <h1>Othello</h1>
         <Link to="/">Home</Link>
         <p> stuff... </p>
       </div>
-      <div classname = "border"></div>
+      <div className = "border"></div>
     </div>);
 }
 
 function Options() {
   return (
-    <div classname = "outer">
-      <div classname = "header"></div>
-      <div classname = "border"></div>
-      <div classname = "body">
+    <div className = "outer">
+      <div className = "header"></div>
+      <div className = "border"></div>
+      <div className = "body">
         <h1>Othello</h1>
         <Link to="/othello">Multiplayer</Link>
         <Link to="/computer">Play against an AI</Link>
       </div>
-      <div classname = "border"></div>
+      <div className = "border"></div>
     </div>);
 }
 
 function Home() {
   return (
-    <div classname = "outer">
-      <div classname = "header"></div>
-      <div classname = "border"></div>
-      <div classname = "body">
+    <div className = "outer">
+      <div className = "header"></div>
+      <div className = "border"></div>
+      <div className = "body">
         <h1>Othello</h1>
         <Link to="/options">Play</Link>
         <Link to="/about">About</Link>
       </div>
-      <div classname = "border"></div>
+      <div className = "border"></div>
     </div>);
 }
 
