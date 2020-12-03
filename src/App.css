@@ -44,6 +44,7 @@
 	border-width:1px;
 	border-color:black;
 	display:inline-block;
+	margin-left: 20%;
 }
 
 .rectangle:focus {
@@ -64,6 +65,7 @@
 .outer {
 	display:flex;
 	flex-direction:row;
+	flex-wrap: wrap;
 }
 
 .messages {

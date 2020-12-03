@@ -46,44 +46,45 @@ function App() {
 
 function About() {
   return (
-    <div className = "outer">
-      <div className = "header"></div>
-      <div className = "border"></div>
+    <div>
+      <div className = "header"><h1 className = "title">Othello</h1></div>
       <div className = "body">
-        <h1>Othello</h1>
-        <Link to="/">Home</Link>
-        <p> stuff... </p>
+        <div className = "buttonHolder">
+          <Link to="/" className = "button">Home</Link>
+        </div>
+        <text> stuff... </text>
       </div>
-      <div className = "border"></div>
     </div>);
 }
 
 function Options() {
   return (
-    <div className = "outer">
-      <div className = "header"></div>
-      <div className = "border"></div>
+    <div>
+      <div className = "header"><h1 className = "title">Othello</h1></div>
       <div className = "body">
-        <h1>Othello</h1>
-        <Link to="/othello">Multiplayer</Link>
-        <Link to="/computer">Play against an AI</Link>
+        <div className = "buttonHolder">
+          <Link to="/othello" className = "button">Multiplayer</Link>
+        </div>
+        <div className = "buttonHolder">
+          <Link to="/" className = "button">Play against an AI</Link>
+        </div>
       </div>
-      <div className = "border"></div>
     </div>);
 }
 
 function Home() {
   return (
-    <div className = "outer">
-      <div className = "header"></div>
-      <div className = "border"></div>
+      <div>
+      <div className = "header"><h1 className = "title">Othello</h1></div>
       <div className = "body">
-        <h1>Othello</h1>
-        <Link to="/options">Play</Link>
-        <Link to="/about">About</Link>
+        <div className = "buttonHolder">
+        <Link to="/options" className = "button">Play</Link>
+        </div>
+        <div className = "buttonHolder">
+        <Link to="/about" className = "button">About</Link>
+        </div>
       </div>
-      <div className = "border"></div>
-    </div>);
+      </div>);
 }
 
 
