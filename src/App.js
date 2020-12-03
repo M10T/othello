@@ -25,9 +25,9 @@ function BasicExample() {
         <Route path="/othello">
           <Board computer={false}/>
         </Route>
-		<Route path="/computer">
-		  <ComputerForm/>
-		</Route>
+        <Route path="/computer">
+		      <ComputerForm/>
+		    </Route>
         <Route path="/about">
           <About />
         </Route>
@@ -66,7 +66,7 @@ function Options() {
           <Link to="/othello" className = "button">Multiplayer</Link>
         </div>
         <div className = "buttonHolder">
-          <Link to="/" className = "button">Play against an AI</Link>
+          <Link to="/computer" className = "button">Play against an AI</Link>
         </div>
       </div>
     </div>);

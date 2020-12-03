@@ -88,7 +88,7 @@ export default class Board extends React.Component{
 			this.setState({color:oppositeColor})
 		}
 	}
-	
+
 	pieceCanChange = (color,x,y) => {
 		const pieceValues = this.state.pieceValues.slice()
 		const oppositeColor = color==='whiteCircle'?'blackCircle':'whiteCircle';
@@ -110,7 +110,7 @@ export default class Board extends React.Component{
 			return false;
 		}).filter(a=>a).length>0;
 	}
-	
+
 	changingPieces = (color) => {
 		return this.state.pieceValues.map((arr,i)=>arr.map((_,j)=>this.pieceCanChange(color,i,j)))
 	}
@@ -159,7 +159,7 @@ export default class Board extends React.Component{
 		return (
 			<div className="outer">
         <div>
-          <h1>Othello</h1>
+          <h1 className = "title">Othello</h1>
         </div>
 				<div className="game">
           {
@@ -181,12 +181,12 @@ export default class Board extends React.Component{
 					</div>
 				</div>):(<></>)}
         <div>
-          <Link to="/">Home</Link>
+          <Link to="/" className = "button">Home</Link>
         </div>
 			</div>
 		)
 	}
-	
+
 	componentDidUpdate(prevProps) {
 		if (prevProps.color !== this.props.color || prevProps.iterations !== this.props.iterations) {
 			const io = require('socket.io-client')
