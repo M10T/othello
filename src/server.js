@@ -1,6 +1,7 @@
 const io = require('socket.io')(3001)
 const AI = require('./montecarlo/AI.js')
 const Tree = require('./montecarlo/Tree.js')
+const Board = require('./montecarlo/Board.js')
 
 var currentRoom = 0;
 var alreadyOne = false;
@@ -35,16 +36,25 @@ io.on('connect', socket=>{
 		const agent = new AI(parseInt(socket.handshake.query['iterations']))
 		socket.emit('setColor',{color:socket.handshake.query['color']})
 		socket.emit('otherplayer')
+		var agentcolor = socket.handshake.query['color']==='blackCircle'?1:-1;
 		if (socket.handshake.query['color'] === 'blackCircle') socket.emit('move',agent.runMove())
 		socket.on('move',o=>{
 			agent.opposingMove(o.x,o.y)
-			if(!agent.tree.value.skipPlayer(1) && !agent.tree.isEnd()) {
+			if(!agent.tree.value.skipPlayer(agentcolor) && !agent.tree.isEnd()) {
 				socket.emit('move',agent.runMove())
-				while (agent.tree.value.skipPlayer(-1) && !agent.tree.isEnd()){
-					agent.tree = new Tree(agent.tree.value,-1)
+				while (agent.tree.value.skipPlayer(-agentcolor) && !agent.tree.isEnd()){
+					agent.tree = new Tree(agent.tree.value,-agentcolor)
 					socket.emit('move',agent.runMove())
 				}
 			}
+		})
+		socket.on('reset',({color,iterations})=>{
+			agent.tree = new Tree(new Board(),-1)
+			agent.iterations = parseInt(iterations)
+			socket.emit('setColor',{color:color})
+			socket.emit('otherplayer')
+			agentcolor = color === 'blackCircle'?1:-1;
+			if (color === 'blackCircle') socket.emit('move',agent.runMove())
 		})
 	}
 })
