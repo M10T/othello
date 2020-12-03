@@ -108,7 +108,7 @@ class Board extends React.Component{
 		if (this.state.playerColor===this.state.color)this.state.socket.emit('move',{x:x,y:y})
 		this.setState({pieceValues:pieceValues,color:oppositeColor})
 	}
-	
+
 	pieceCanChange = (color,x,y) => {
 		const pieceValues = this.state.pieceValues.slice()
 		const oppositeColor = color==='whiteCircle'?'blackCircle':'whiteCircle';
@@ -130,7 +130,7 @@ class Board extends React.Component{
 			return false;
 		}).filter(a=>a).length>0;
 	}
-	
+
 	changingPieces = (color) => {
 		return this.state.pieceValues.map((arr,i)=>arr.map((_,j)=>this.pieceCanChange(color,i,j)))
 	}
@@ -182,8 +182,8 @@ class Board extends React.Component{
 		const changingPieces = this.changingPieces(this.state.color)
 		return (
 			<div className="outer">
-        <div>
-          <h1>Othello</h1>
+        <div className = "header">
+          <h1 className = "title">Othello</h1>
         </div>
 				<div className="game">
           {
@@ -205,7 +205,7 @@ class Board extends React.Component{
 					</div>
 				</div>
         <div>
-          <Link to="/">Home</Link>
+          <Link to="/" className = "button">Home</Link>
         </div>
 			</div>
 		)
@@ -222,44 +222,45 @@ function App() {
 
 function About() {
   return (
-    <div classname = "outer">
-      <div classname = "header"></div>
-      <div classname = "border"></div>
-      <div classname = "body">
-        <h1>Othello</h1>
-        <Link to="/">Home</Link>
+    <div>
+      <div className = "header"><h1 className = "title">Othello</h1></div>
+      <div className = "body">
+        <div className = "buttonHolder">
+          <Link to="/" className = "button">Home</Link>
+        </div>
         <text> stuff... </text>
       </div>
-      <div classname = "border"></div>
     </div>);
 }
 
 function Options() {
   return (
-    <div classname = "outer">
-      <div classname = "header"></div>
-      <div classname = "border"></div>
-      <div classname = "body">
-        <h1>Othello</h1>
-        <Link to="/othello">Multiplayer</Link>
-        <Link Link to="/">Play against an AI</Link>
+    <div>
+      <div className = "header"><h1 className = "title">Othello</h1></div>
+      <div className = "body">
+        <div className = "buttonHolder">
+          <Link to="/othello" className = "button">Multiplayer</Link>
+        </div>
+        <div className = "buttonHolder">
+          <Link to="/" className = "button">Play against an AI</Link>
+        </div>
       </div>
-      <div classname = "border"></div>
     </div>);
 }
 
 function Home() {
   return (
-    <div classname = "outer">
-      <div classname = "header"></div>
-      <div classname = "border"></div>
-      <div classname = "body">
-        <h1>Othello</h1>
-        <Link to="/options">Play</Link>
-        <Link to="/about">About</Link>
+      <div>
+      <div className = "header"><h1 className = "title">Othello</h1></div>
+      <div className = "body">
+        <div className = "buttonHolder">
+        <Link to="/options" className = "button">Play</Link>
+        </div>
+        <div className = "buttonHolder">
+        <Link to="/about" className = "button">About</Link>
+        </div>
       </div>
-      <div classname = "border"></div>
-    </div>);
+      </div>);
 }
 
 

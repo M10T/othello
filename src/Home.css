@@ -1,14 +1,55 @@
 .header {
-  height: 100px;
   width: 100%;
+  float: left;
+  text-align: center;
+  padding: 20px  10px 0px 0px;
+  flex-wrap: 100%;
+}
+
+.title {
+  font-size: 50px;
+  text-decoration: underline;
 }
 
 .border {
-  width: 15%;
-  position: float;
+  width: 14%;
+  float: left;
+  border: 1px black solid;
+  height: 200px;
 }
 
 .body {
-  width: 70%;
-  position: float;
+  width: 100%;
+  float: left;
+  text-align: center;
+}
+
+.buttonHolder {
+  display: block;
+  padding: 10px;
+  margin: 5px;
+}
+
+.button {
+  text-decoration: none;
+  color: red;
+  font-size: 30px;
+  font-style: bold;
+  text-shadow: 1px 1px 1px, -1px 0px black, 0px -1px black, 2px 0px black, 0px 2px black, 3px 2px 5px grey;
+}
+
+.button:hover{
+  text-decoration: none;
+  color: #ff4d4d;
+  font-size: 30px;
+  font-style: bold;
+  text-shadow: 1px 1px 1px, -1px 0px black, 0px -1px black, 2px 0px black, 0px 2px black, 3px 2px 5px grey;
+}
+
+.button:active{
+  text-decoration: none;
+  color: #ff4d4d;
+  font-size: 29px;
+  font-style: bold;
+  text-shadow: 1px 1px 1px, -1px 0px black, 0px -1px black, 2px 0px black, 0px 2px black;
 }
