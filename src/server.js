@@ -32,10 +32,10 @@ io.on('connect', socket=>{
 		socket.on('move', x=>io.to(sendRoom).emit('move',x))
 		nextRoom()
 	} else {
-		const agent = new AI(300)
-		socket.emit('setColor',{color:'blackCircle'})
+		const agent = new AI(parseInt(socket.handshake.query['iterations']))
+		socket.emit('setColor',{color:socket.handshake.query['color']})
 		socket.emit('otherplayer')
-		socket.emit('move',agent.runMove())
+		if (socket.handshake.query['color'] === 'blackCircle') socket.emit('move',agent.runMove())
 		socket.on('move',o=>{
 			agent.opposingMove(o.x,o.y)
 			if(!agent.tree.value.skipPlayer(1) && !agent.tree.isEnd()) {
