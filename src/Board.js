@@ -189,21 +189,13 @@ export default class Board extends React.Component{
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.color !== this.props.color || prevProps.iterations !== this.props.iterations) {
-			const io = require('socket.io-client')
-			const socket = io.connect('ws://localhost:3001',{query:{computer:this.props.computer,color:this.props.color,iterations:this.props.iterations}})
-			socket.on('setColor',x=>{this.setState({playerColor:x.color})})
-			socket.on('disconnected',()=>this.setState({otherPlayer:false}))
-			socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
-			socket.on('move', o=>{
-				this.setPiece(o.x,o.y);
-			})
-			socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
 			const pieceValues = Array.from(Array(8),_=>Array(8).fill(''))
 			pieceValues[3][3]='blackCircle'
 			pieceValues[4][4]='blackCircle'
 			pieceValues[3][4]='whiteCircle'
 			pieceValues[4][3]='whiteCircle'
-			this.setState({socket:socket,pieceValues:pieceValues,otherPlayer:false})
+			this.setState({pieceValues:pieceValues,otherPlayer:false,playerColor:undefined,color:'whiteCircle'})
+			this.state.socket.emit('reset',{color:this.props.color,iterations:this.props.iterations})
 		}
 	}
 }
