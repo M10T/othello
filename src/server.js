@@ -40,12 +40,14 @@ io.on('connect', socket=>{
 		if (socket.handshake.query['color'] === 'blackCircle') socket.emit('move',agent.runMove())
 		socket.on('move',o=>{
 			agent.opposingMove(o.x,o.y)
-			if(!agent.tree.value.skipPlayer(agentcolor) && !agent.tree.isEnd()) {
+			if(!agent.tree.value.skipPlayer(agentcolor) && !agent.tree.isEnd()) {				
 				socket.emit('move',agent.runMove())
 				while (agent.tree.value.skipPlayer(-agentcolor) && !agent.tree.isEnd()){
 					agent.tree = new Tree(agent.tree.value,-agentcolor)
 					socket.emit('move',agent.runMove())
 				}
+			} else {
+				agent.tree = new Tree(agent.tree.value,-agentcolor)
 			}
 		})
 		socket.on('reset',({color,iterations})=>{

@@ -66,7 +66,7 @@ function Options() {
           <Link to="/othello" className = "button">Multiplayer</Link>
         </div>
         <div className = "buttonHolder">
-          <Link to="/" className = "button">Play against an AI</Link>
+          <Link to="/computer" className = "button">Play against an AI</Link>
         </div>
       </div>
     </div>);
