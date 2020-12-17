@@ -25,9 +25,9 @@ function BasicExample() {
         <Route path="/othello">
           <Board computer={false}/>
         </Route>
-		<Route path="/computer">
-		  <ComputerForm/>
-		</Route>
+        <Route path="/computer">
+		      <ComputerForm/>
+		    </Route>
         <Route path="/about">
           <About />
         </Route>
