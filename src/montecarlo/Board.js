@@ -1,10 +1,10 @@
 class Board {
 	constructor() {
 		const board = Array.from(Array(8),_=>Array(8).fill(0))
-		board[3][3] = -1;
-		board[3][4] = 1;
-		board[4][3] = 1;
-		board[4][4] = -1;
+		board[3][3] = 1;
+		board[3][4] = -1;
+		board[4][3] = -1;
+		board[4][4] = 1;
 		this.board = board;
 		this.lastMove = undefined;
 	}
