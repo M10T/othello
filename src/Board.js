@@ -158,7 +158,7 @@ export default class Board extends React.Component{
 		const changingPieces = this.changingPieces(this.state.color)
 		return (
 			<div className="outer">
-        <div>
+        <div className="header">
           <h1 className = "title">Othello</h1>
         </div>
 				<div className="game">
