@@ -28,7 +28,7 @@ export default class Board extends React.Component{
 		pieceValues[4][3]='whiteCircle'
 		this.state = {
 			pieceValues: pieceValues,
-			color:'whiteCircle',
+			color:'blackCircle',
 			playerColor: undefined,
 			otherPlayer: false,
 			chat: [],
@@ -194,8 +194,18 @@ export default class Board extends React.Component{
 			pieceValues[4][4]='blackCircle'
 			pieceValues[3][4]='whiteCircle'
 			pieceValues[4][3]='whiteCircle'
-			this.setState({pieceValues:pieceValues,otherPlayer:false,playerColor:undefined,color:'whiteCircle'})
-			this.state.socket.emit('reset',{color:this.props.color,iterations:this.props.iterations})
+			this.setState({pieceValues:pieceValues,otherPlayer:false,playerColor:undefined,color:'blackCircle'})
+			this.state.socket.disconnect()
+			const io = require('socket.io-client')
+			const socket = io.connect('ws://localhost:3001',{query:{computer:this.props.computer,color:this.props.color,iterations:this.props.iterations}})
+			socket.on('setColor',x=>{this.setState({playerColor:x.color})})
+			socket.on('disconnected',()=>this.setState({otherPlayer:false}))
+			socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
+			socket.on('move', o=>{
+				this.setPiece(o.x,o.y);
+			})
+			socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
+			this.setState({socket:socket})
 		}
 	}
 }

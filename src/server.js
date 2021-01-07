@@ -36,8 +36,8 @@ io.on('connect', socket=>{
 		const agent = new AI(parseInt(socket.handshake.query['iterations']))
 		socket.emit('setColor',{color:socket.handshake.query['color']})
 		socket.emit('otherplayer')
-		var agentcolor = socket.handshake.query['color']==='blackCircle'?1:-1;
-		if (socket.handshake.query['color'] === 'blackCircle') socket.emit('move',agent.runMove())
+		var agentcolor = socket.handshake.query['color']==='blackCircle'?-1:1;
+		if (agentcolor===1) socket.emit('move',agent.runMove())
 		socket.on('move',o=>{
 			agent.opposingMove(o.x,o.y)
 			if(!agent.tree.value.skipPlayer(agentcolor) && !agent.tree.isEnd()) {				
@@ -49,14 +49,6 @@ io.on('connect', socket=>{
 			} else {
 				agent.tree = new Tree(agent.tree.value,-agentcolor)
 			}
-		})
-		socket.on('reset',({color,iterations})=>{
-			agent.tree = new Tree(new Board(),-1)
-			agent.iterations = parseInt(iterations)
-			socket.emit('setColor',{color:color})
-			socket.emit('otherplayer')
-			agentcolor = color === 'blackCircle'?1:-1;
-			if (color === 'blackCircle') socket.emit('move',agent.runMove())
 		})
 	}
 })

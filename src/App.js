@@ -43,7 +43,6 @@ function App() {
 	</div>
   );
 }
-
 function About() {
   return (
     <div>
@@ -52,7 +51,8 @@ function About() {
         <div className = "buttonHolder">
           <Link to="/" className = "button">Home</Link>
         </div>
-        <text> stuff... </text>
+		<p>Othello is a game with very specific rules. The position of the game is always the same at the start, but when opposing pieces are between an already existing piece and a newly placed piece, those pieces switch colors.</p>
+		<br/><p></p>
       </div>
     </div>);
 }
