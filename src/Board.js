@@ -161,9 +161,9 @@ export default class Board extends React.Component{
         <div className="header">
           <h1 className = "title">Othello</h1>
         </div>
-				<div className="game">
+				<div className="game" id="gamer">
           {
-            this.end()?<h1 id="winner">{this.winner()}</h1>:''
+            this.end()?this.winner()=="The Winner is White"?<h1 id="winner" className = "wwinner">{this.winner()}</h1>:<h1 id="winner" className = "bwinner">{this.winner()}</h1>:''
           }
 					{
 						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
@@ -179,9 +179,9 @@ export default class Board extends React.Component{
 					<div className="newmessage">
 						<input type="text" className="messageinput" onKeyUp={this.sendChat}/>
 					</div>
-				</div>):(<></>)}
+				</div>):('')}
         <div>
-          <Link to="/" className = "button">Home</Link>
+          <Link to="/" className = "button home">Home</Link>
         </div>
 			</div>
 		)

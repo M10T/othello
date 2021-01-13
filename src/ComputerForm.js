@@ -9,20 +9,19 @@ export default class ComputerForm extends React.Component {
 		super(props)
 		this.state = {color: 'whiteCircle', iterations: '50'}
 	}
-	
+
 	setColor = event => {
 		this.setState({color: event.target.value})
 	}
-	
+
 	setIterations = event => {
 		this.setState({iterations:event.target.value})
 	}
-	
+
 	render() {
 		return (
-			<div className="outer">
-				<Board computer={true} color={this.state.color} iterations={this.state.iterations}/>
-				<form> 
+			<div className="top">
+				<form className="selector">
 					<select value={this.state.color} onChange={this.setColor}>
 						<option value="whiteCircle">White</option>
 						<option value="blackCircle">Black</option>
@@ -33,6 +32,7 @@ export default class ComputerForm extends React.Component {
 						<option value="300">Hard</option>
 					</select>
 				</form>
+				<Board computer={true} color={this.state.color} iterations={this.state.iterations}/>
 			</div>
 		)
 	}

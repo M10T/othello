@@ -54,3 +54,9 @@
   font-style: bold;
   text-shadow: 1px 1px 1px, -1px 0px black, 0px -1px black, 2px 0px black, 0px 2px black;
 }
+
+.home {
+  position: absolute;
+  bottom: 100px;
+  right: 10%;
+}
