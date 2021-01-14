@@ -158,6 +158,9 @@ export default class Board extends React.Component{
 		const changingPieces = this.changingPieces(this.state.color)
 		return (
 			<div className="outer">
+        <div>
+          <Link to="/" className = "button home">Home</Link>
+        </div>
         <div className="header">
           <h1 className = "title">Othello</h1>
         </div>
@@ -180,9 +183,6 @@ export default class Board extends React.Component{
 						<input type="text" className="messageinput" onKeyUp={this.sendChat}/>
 					</div>
 				</div>):('')}
-        <div>
-          <Link to="/" className = "button home">Home</Link>
-        </div>
 			</div>
 		)
 	}
