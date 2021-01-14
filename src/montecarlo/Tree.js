@@ -65,7 +65,9 @@ class Tree {
 	
 	expand() {
 		const optimal = this.selectOptimal()
-		if (optimal === undefined) return
+		if (optimal === undefined) {
+			return
+		}
 		optimal.createChildren()
 		const chosenChild = optimal.children[Math.floor(Math.random()*optimal.children.length)]
 		if (chosenChild.simulate()) {

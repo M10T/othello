@@ -5,6 +5,7 @@ class AI {
 	constructor(iterations) {
 		this.tree = new Tree(new Board(),-1)
 		this.iterations = iterations;
+		this.move = 0;
 	}
 	
 	runMove() {

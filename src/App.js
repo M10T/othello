@@ -52,7 +52,7 @@ function About() {
           <Link to="/" className = "button">Home</Link>
         </div>
 		<p>Othello is a game with very specific rules. The position of the game is always the same at the start, but when opposing pieces are between an already existing piece and a newly placed piece, those pieces switch colors.</p>
-		<br/><p></p>
+		<p>The creators are Milan Tenn and Andrew Szabo. We are creating this site as a project for our ADSB class.</p>
       </div>
     </div>);
 }
