@@ -227,7 +227,7 @@ export default class Board extends React.Component{
 				this.setPiece(o.x,o.y);
 			})
 			socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
-			this.setState({socket:socket,lastMove:[],moves:[],boards:[pieceValues.map(arr=>arr.slice)]})
+			this.setState({socket:socket,lastMove:[],moves:[],boards:[pieceValues.map(arr=>arr.slice())],index:0,currentIndex:0})
 		}
 	}
 }
