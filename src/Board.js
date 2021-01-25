@@ -9,8 +9,9 @@ class PieceSpace extends React.Component {
     render() {
 		const [ind,i] = this.props.loc;
 		const type=this.props.canChange?this.props.playerColor+' markerOpacity':this.props.type;
+		const highlight = this.props.loc.every((v,i)=>this.props.lastMove[i]===v)
 		return (
-			<button className="rectangle" onClick={()=>{if(this.props.canChange)this.props.setPiece(ind,i)}}>
+			<button className={"rectangle"+(highlight?' highlight':'')} onClick={()=>{if(this.props.canChange)this.props.setPiece(ind,i)}}>
 				<div className={type}/>
 			</button>
 		)
@@ -33,7 +34,12 @@ export default class Board extends React.Component{
 			otherPlayer: false,
 			chat: [],
 			socket: undefined,
-			chatend: undefined
+			chatend: undefined,
+			lastMove: [],
+			moves: [],
+			index: 0,
+			currentIndex: 0,
+			boards: [pieceValues.map(arr=>arr.slice())]
 		}
 	}
 
@@ -53,9 +59,20 @@ export default class Board extends React.Component{
 	getPiece = (x,y) => {
 		return this.state.pieceValues[x][y]
 	}
-
+	
+	back = () => {
+		if (this.state.currentIndex===0) return
+		this.setState({currentIndex:this.state.currentIndex-1,pieceValues:this.state.boards[this.state.currentIndex-1],lastMove:this.state.currentIndex>1?this.state.moves[this.state.currentIndex-2]:[]})
+	}
+	
+	next = () => {
+		if (this.state.currentIndex==this.state.index)return
+		this.setState({currentIndex:this.state.currentIndex+1,pieceValues:this.state.boards[this.state.currentIndex+1],lastMove:this.state.moves[this.state.currentIndex]})
+	}
+	
 	setPiece = (x,y) => {
-		const pieceValues = this.state.pieceValues.slice();
+		const pieceValues = this.state.boards[this.state.index].map(arr=>arr.slice());
+		this.setState({lastMove:[x,y],moves:this.state.moves.concat([[x,y]]),index:this.state.index+1,currentIndex:this.state.index+1})
 		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
 		pieceValues[x][y]=this.state.color;
 		const adjacentPieces = [[x-1,y-1],[x,y-1],[x+1,y-1],[x+1,y],[x+1,y+1],[x,y+1],[x-1,y+1],[x-1,y]]
@@ -83,6 +100,7 @@ export default class Board extends React.Component{
 		})
 		if (this.state.playerColor===this.state.color)this.state.socket.emit('move',{x:x,y:y})
 		this.setState({pieceValues:pieceValues})
+		this.setState({boards:this.state.boards.concat([pieceValues.map(arr=>arr.slice())])})
 		const oMoves = this.changingPieces(oppositeColor).flat().reduce((acc,v)=>acc||v)
 		if (oMoves) {
 			this.setState({color:oppositeColor})
@@ -169,7 +187,7 @@ export default class Board extends React.Component{
             this.end()?this.winner()=="The Winner is White"?<button id="winner" className = "wwinner">{this.winner()}</button>:<button id="winner" className = "bwinner">{this.winner()}</button>:''
           }
 					{
-						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
+						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} lastMove={this.state.lastMove} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor&&this.state.currentIndex===this.state.index} type={v} playerColor={this.state.color}/>))}</div>))
 					}
 				</div>
 				{!this.props.computer?(<div className="chat">
@@ -183,6 +201,10 @@ export default class Board extends React.Component{
 						<input type="text" className="messageinput" onKeyUp={this.sendChat}/>
 					</div>
 				</div>):('')}
+				<div>
+					<button type="button" onClick={()=>this.back()}>Back</button>
+					<button type="button" onClick={()=>this.next()}>Next</button>
+				</div>
 			</div>
 		)
 	}
@@ -205,7 +227,7 @@ export default class Board extends React.Component{
 				this.setPiece(o.x,o.y);
 			})
 			socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
-			this.setState({socket:socket})
+			this.setState({socket:socket,lastMove:[],moves:[],boards:[pieceValues.map(arr=>arr.slice)]})
 		}
 	}
 }
