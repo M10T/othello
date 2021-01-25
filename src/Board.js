@@ -9,8 +9,9 @@ class PieceSpace extends React.Component {
     render() {
 		const [ind,i] = this.props.loc;
 		const type=this.props.canChange?this.props.playerColor+' markerOpacity':this.props.type;
+		const highlight = this.props.loc.every((v,i)=>this.props.lastMove[i]===v)
 		return (
-			<button className="rectangle" onClick={()=>{if(this.props.canChange)this.props.setPiece(ind,i)}}>
+			<button className={"rectangle"+(highlight?' highlight':'')} onClick={()=>{if(this.props.canChange)this.props.setPiece(ind,i)}}>
 				<div className={type}/>
 			</button>
 		)
@@ -33,7 +34,8 @@ export default class Board extends React.Component{
 			otherPlayer: false,
 			chat: [],
 			socket: undefined,
-			chatend: undefined
+			chatend: undefined,
+			lastMove: []
 		}
 	}
 
@@ -55,6 +57,7 @@ export default class Board extends React.Component{
 	}
 
 	setPiece = (x,y) => {
+		this.setState({lastMove:[x,y]})
 		const pieceValues = this.state.pieceValues.slice();
 		const oppositeColor = this.state.color==='whiteCircle'?'blackCircle':'whiteCircle';
 		pieceValues[x][y]=this.state.color;
@@ -169,7 +172,7 @@ export default class Board extends React.Component{
             this.end()?this.winner()=="The Winner is White"?<h1 id="winner" className = "wwinner">{this.winner()}</h1>:<h1 id="winner" className = "bwinner">{this.winner()}</h1>:''
           }
 					{
-						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
+						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} lastMove={this.state.lastMove} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
 					}
 				</div>
 				{!this.props.computer?(<div className="chat">
@@ -205,7 +208,7 @@ export default class Board extends React.Component{
 				this.setPiece(o.x,o.y);
 			})
 			socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
-			this.setState({socket:socket})
+			this.setState({socket:socket,lastMove:[]})
 		}
 	}
 }

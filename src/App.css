@@ -11,6 +11,11 @@
 	padding:0;
 }
 
+.highlight {
+	border-color:#efe;
+	border-width:3px;
+}
+
 .blackCircle {
 	background:black;
 	border-radius:50%;

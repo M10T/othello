@@ -22,7 +22,7 @@ io.on('connect', socket=>{
 		}
 		socket.join(currentRoom)
 		socket.on('message',data=>io.to(sendRoom).send(data))
-		socket.emit('setColor', {color:alreadyOne?'blackCircle':'whiteCircle'});
+		socket.emit('setColor', {color:alreadyOne?'whiteCircle':'blackCircle'});
 		socket.on('disconnect', ()=>{
 			io.to(sendRoom).emit('disconnected')
 			if (room == currentRoom-1) {
