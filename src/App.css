@@ -18,6 +18,8 @@
 	height:90%;
 	border-style:solid;
 	border-width:1px;
+	animation-name: toblack;
+	animation-duration: 0.5s;
 }
 
 .whiteCircle {
@@ -28,10 +30,27 @@
 	border-style:solid;
 	border-width:1px;
 	background:white;
+	animation-name: towhite;
+	animation-duration: 0.5s;
+}
+
+@keyframes toblack{
+	0% {background-color: white;}
+	50% {background-color: white; width: 2%;}
+	51% {background-color: black; width: 1%;}
+	100% {background-color: black; width: 90%;}
+}
+
+@keyframes towhite{
+	0% {background-color: black;}
+	50% {background-color: black; width: 2%;}
+	51% {background-color: white; width: 1%;}
+	100% {background-color: white; width: 90%;}
 }
 
 .markerOpacity {
 	opacity:0.5;
+	animation-name: none;
 }
 
 .row {

@@ -60,3 +60,8 @@
   top: 30px;
   right: 7%;
 }
+
+.fancyAbout {
+  font-style: italic;
+  font-style: bold;
+}

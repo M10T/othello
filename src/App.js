@@ -51,12 +51,12 @@ function About() {
         <div className = "buttonHolder">
           <Link to="/" className = "button">Home</Link>
         </div>
-		<p>A second to learn, a lifetime to master</p>
-    <p>The position of the game is always the same at the start. Players take turns placing a single<br/ >
+		<p className = "fancyAbout">A minute to learn, a lifetime to master</p>
+    <p className = "mainAbout">The position of the game is always the same at the start. Players take turns placing a single<br/ >
     tile of their color on the board. You can only place a piece if it causes opponent pieces to flip.<br/ >
-    Opponent pieces flip if they lie in a continuous line (min of one tile) between one of your pieces<br/ >
+    Opponent pieces flip if they lie in a continuous line between one of your pieces<br/ >
     and the pieces you just placed.</p>
-		<p><br/ >The creators: Milan Tenn and Andrew Szabo.<br/ >We are creating this site as a project for our ADSB class.</p>
+		<p className = "credits"><br/ >The creators: Milan Tenn and Andrew Szabo.<br/ >We created this site as a project for our Advanced Data Structres B class.</p>
       </div>
     </div>);
 }

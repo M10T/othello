@@ -166,7 +166,7 @@ export default class Board extends React.Component{
         </div>
 				<div className="game" id="gamer">
           {
-            this.end()?this.winner()=="The Winner is White"?<h1 id="winner" className = "wwinner">{this.winner()}</h1>:<h1 id="winner" className = "bwinner">{this.winner()}</h1>:''
+            this.end()?this.winner()=="The Winner is White"?<button id="winner" className = "wwinner">{this.winner()}</button>:<button id="winner" className = "bwinner">{this.winner()}</button>:''
           }
 					{
 						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor} type={v} playerColor={this.state.color}/>))}</div>))
