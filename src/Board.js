@@ -59,17 +59,17 @@ export default class Board extends React.Component{
 	getPiece = (x,y) => {
 		return this.state.pieceValues[x][y]
 	}
-	
+
 	back = () => {
 		if (this.state.currentIndex===0) return
 		this.setState({currentIndex:this.state.currentIndex-1,pieceValues:this.state.boards[this.state.currentIndex-1],lastMove:this.state.currentIndex>1?this.state.moves[this.state.currentIndex-2]:[]})
 	}
-	
+
 	next = () => {
 		if (this.state.currentIndex==this.state.index)return
 		this.setState({currentIndex:this.state.currentIndex+1,pieceValues:this.state.boards[this.state.currentIndex+1],lastMove:this.state.moves[this.state.currentIndex]})
 	}
-	
+
 	setPiece = (x,y) => {
 		const pieceValues = this.state.boards[this.state.index].map(arr=>arr.slice());
 		this.setState({lastMove:[x,y],moves:this.state.moves.concat([[x,y]]),index:this.state.index+1,currentIndex:this.state.index+1})
@@ -202,8 +202,8 @@ export default class Board extends React.Component{
 					</div>
 				</div>):('')}
 				<div>
-					<button type="button" onClick={()=>this.back()}>Back</button>
-					<button type="button" onClick={()=>this.next()}>Next</button>
+					<button type="button" className="clickBack" onClick={()=>this.back()}></button>
+					<button type="button" className="clickForward" onClick={()=>this.next()}></button>
 				</div>
 			</div>
 		)

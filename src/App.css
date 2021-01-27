@@ -58,6 +58,10 @@
 	animation-name: none;
 }
 
+.justPlaced {
+	animation-name: none;
+}
+
 .row {
 	display:flex;
 	flex-direction:row;
@@ -144,4 +148,56 @@
 .selector {
 	margin-left: 20px;
 	margin-top: 5px;
+}
+
+.clickBack {
+	position: relative;
+  width: 0;
+  height: 0;
+	border: none;
+  border-top: 15px solid transparent;
+  border-left: 15px solid red;
+  transform: rotate(5deg);
+	background: none;
+	color: none;
+	margin: 0px 20px;
+}
+
+.clickBack::after {
+	content: "";
+  position: absolute;
+  border: 0 solid transparent;
+  border-top: 7px solid red;
+  border-radius: 0 30px 0 0;
+  top: -19px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  transform: rotate(-35deg);
+}
+
+.clickForward {
+	position: relative;
+  width: 0;
+  height: 0;
+	border: none;
+  border-top: 15px solid transparent;
+  border-right: 15px solid red;
+  transform: rotate(-5deg);
+	background: none;
+	color: none;
+	margin: 0px 20px;
+}
+
+.clickForward::after {
+	content: "";
+  position: absolute;
+  border: 0 solid transparent;
+  border-top: 7px solid red;
+  border-radius: 30px 0 0 0;
+  top: -19px;
+  left: -8px;
+  width: 24px;
+  height: 24px;
+  transform: rotate(35deg);
 }
