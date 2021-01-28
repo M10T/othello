@@ -11,7 +11,7 @@ class PieceSpace extends React.Component {
 		const type=this.props.canChange?this.props.playerColor+' markerOpacity':this.props.type;
 		const highlight = this.props.loc.every((v,i)=>this.props.lastMove[i]===v)
 		return (
-			<button className={"rectangle"+(highlight?' highlight':'')} onClick={()=>{if(this.props.canChange)this.props.setPiece(ind,i)}}>
+			<button className={"rectangle"+(highlight?' highlight':'')} onClick={()=>{if(this.props.canChange){this.props.setPiece(ind,i);}}}>
 				<div className={type}/>
 			</button>
 		)
@@ -167,6 +167,48 @@ export default class Board extends React.Component{
 		}
 	}
 
+  reseter = () => {
+    const pieceValues = Array.from(Array(8),_=>Array(8).fill(''))
+    pieceValues[3][3]='blackCircle'
+    pieceValues[4][4]='blackCircle'
+    pieceValues[3][4]='whiteCircle'
+    pieceValues[4][3]='whiteCircle'
+    this.setState({pieceValues:pieceValues,otherPlayer:false,playerColor:undefined,color:'blackCircle'})
+    this.state.socket.disconnect()
+    const io = require('socket.io-client')
+    const socket = io.connect('ws://localhost:3001',{query:{computer:this.props.computer,color:this.props.color,iterations:this.props.iterations}})
+    socket.on('setColor',x=>{this.setState({playerColor:x.color})})
+    socket.on('disconnected',()=>this.setState({otherPlayer:false}))
+    socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
+    socket.on('move', o=>{
+      this.setPiece(o.x,o.y);
+    })
+    socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
+    this.setState({socket:socket,lastMove:[],moves:[],boards:[pieceValues.map(arr=>arr.slice())],index:0,currentIndex:0})
+  }
+
+  componentDidUpdate(prevProps) {
+		if (prevProps.color !== this.props.color || prevProps.iterations !== this.props.iterations) {
+      const pieceValues = Array.from(Array(8),_=>Array(8).fill(''))
+      pieceValues[3][3]='blackCircle'
+      pieceValues[4][4]='blackCircle'
+      pieceValues[3][4]='whiteCircle'
+      pieceValues[4][3]='whiteCircle'
+      this.setState({pieceValues:pieceValues,otherPlayer:false,playerColor:undefined,color:'blackCircle'})
+      this.state.socket.disconnect()
+      const io = require('socket.io-client')
+      const socket = io.connect('ws://localhost:3001',{query:{computer:this.props.computer,color:this.props.color,iterations:this.props.iterations}})
+      socket.on('setColor',x=>{this.setState({playerColor:x.color})})
+      socket.on('disconnected',()=>this.setState({otherPlayer:false}))
+      socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
+      socket.on('move', o=>{
+        this.setPiece(o.x,o.y);
+      })
+      socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
+      this.setState({socket:socket,lastMove:[],moves:[],boards:[pieceValues.map(arr=>arr.slice())],index:0,currentIndex:0})
+	  }
+  }
+
 	render() {
 		const chatend = document.getElementById('chatend')
 		if (chatend!==null && chatend !== this.state.chatend) {
@@ -184,7 +226,7 @@ export default class Board extends React.Component{
         </div>
 				<div className="game" id="gamer">
           {
-            this.end()?this.winner()=="The Winner is White"?<button id="winner" className = "wwinner">{this.winner()}</button>:<button id="winner" className = "bwinner">{this.winner()}</button>:''
+            this.end()?this.winner()=="The Winner is White"?<button id="winner" className = "wwinner" onClick={this.reseter}>{this.winner()}</button>:<button id="winner" className = "bwinner" onClick={this.reseter}>{this.winner()}</button>:''
           }
 					{
 						this.state.pieceValues.map((arr,ind)=>(<div className="row" key={ind}>{arr.map((v,i)=>(<PieceSpace key={i} loc={[ind,i]} lastMove={this.state.lastMove} setPiece={this.setPiece} canChange={changingPieces[ind][i]&&this.state.otherPlayer&&this.state.color===this.state.playerColor&&this.state.currentIndex===this.state.index} type={v} playerColor={this.state.color}/>))}</div>))
@@ -207,27 +249,5 @@ export default class Board extends React.Component{
 				</div>
 			</div>
 		)
-	}
-
-	componentDidUpdate(prevProps) {
-		if (prevProps.color !== this.props.color || prevProps.iterations !== this.props.iterations) {
-			const pieceValues = Array.from(Array(8),_=>Array(8).fill(''))
-			pieceValues[3][3]='blackCircle'
-			pieceValues[4][4]='blackCircle'
-			pieceValues[3][4]='whiteCircle'
-			pieceValues[4][3]='whiteCircle'
-			this.setState({pieceValues:pieceValues,otherPlayer:false,playerColor:undefined,color:'blackCircle'})
-			this.state.socket.disconnect()
-			const io = require('socket.io-client')
-			const socket = io.connect('ws://localhost:3001',{query:{computer:this.props.computer,color:this.props.color,iterations:this.props.iterations}})
-			socket.on('setColor',x=>{this.setState({playerColor:x.color})})
-			socket.on('disconnected',()=>this.setState({otherPlayer:false}))
-			socket.on('otherplayer', ()=>this.setState({otherPlayer:true}))
-			socket.on('move', o=>{
-				this.setPiece(o.x,o.y);
-			})
-			socket.on('message', x=>this.setState({chat: this.state.chat.concat({sender: 'Other', contents:x}),chatend:undefined}))
-			this.setState({socket:socket,lastMove:[],moves:[],boards:[pieceValues.map(arr=>arr.slice())],index:0,currentIndex:0})
-		}
 	}
 }
