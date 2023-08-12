@@ -56,7 +56,7 @@ function About() {
     tile of their color on the board. You can only place a piece if it causes opponent pieces to flip.<br/ >
     Opponent pieces flip if they lie in a continuous line between one of your pieces<br/ >
     and the pieces you just placed.</p>
-		<p className = "credits"><br/ >The creators: Milan Tenn and Andrew Szabo.<br/ >We created this site as a project for our Advanced Data Structres B class.</p>
+		<p className = "credits"><br/ >The creators: Milan Tenn and Andrew Szabo.<br/ >We created this site as a project for our Algorithms and Data Structures B class.</p>
       </div>
     </div>);
 }
